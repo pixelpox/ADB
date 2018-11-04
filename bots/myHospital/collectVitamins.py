@@ -38,9 +38,7 @@ def collectVitamins():
     pullImage()
     clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/vitaminStorageButton.png")
     print(clickLocation)
-    if(not clickLocation):
-        print("STORAGE BUTTON: I cant see anything")
-        return
+
     while(clickLocation):
         print("I see a box")
         adbTapScreen(clickLocation)
@@ -48,6 +46,9 @@ def collectVitamins():
         time.sleep(2)
         pullImage()
         clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/vitaminStorageButton.png")
+
+    if(not clickLocation):
+        print("STORAGE BUTTON: I cant see anything")
 
     #close the vitamin box
     pullImage()
@@ -61,7 +62,8 @@ def collectVitamins():
     pullImage()
     clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/homeButton.png")
     adbTapScreen(clickLocation)
+    time.sleep(20)
 
     return True
 
-collectVitamins()
+#collectVitamins()

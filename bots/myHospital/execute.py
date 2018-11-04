@@ -7,6 +7,10 @@ from clicker import adbTapScreen
 
 def myinit():
     subprocess.Popen('powershell.exe adb shell monkey -p com.cherrypickgames.myhospital -v 500')
+    #use the following to see if the game is running... wont work if its in the background
+    #adb shell pidof com.cherrypickgames.myhospital
+    #use the following to seee what has the current focus
+    #adb shell dumpsys window windows | select-string -Pattern 'mCurrentFocus'
 
 
 def watchAdvertisement():

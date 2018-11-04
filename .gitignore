@@ -1,2 +1,3 @@
 bots/myHospital/screenshot/log/screenshot_*.png
 bots/myHospital/__pycache__/*.pyc
+ADBScreenshot*

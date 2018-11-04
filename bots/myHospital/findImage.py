@@ -6,7 +6,7 @@ def templateMatch(sourcePath , templatePath , accuracy = 0.9 , showImage = False
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     template = cv2.imread(templatePath , cv2.IMREAD_GRAYSCALE)
-    cv2.imshow("template" , template)
+    #cv2.imshow("template" , template)
 
     #get x and y of the template
     w, h = template.shape[::-1]
