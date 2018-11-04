@@ -2,7 +2,6 @@ import os
 import time
 import subprocess
 from pullImage import pullImage
-from clickBillboard import *
 from findImage import templateMatch
 from clicker import adbTapScreen
 
@@ -10,11 +9,38 @@ def myinit():
     subprocess.Popen('powershell.exe adb shell monkey -p com.cherrypickgames.myhospital -v 500')
 
 
+def watchAdvertisement():
+    time.sleep(15)
+    print("watching ad")
+
+    clickLocation = ()
+
+    while(not clickLocation):
+        print("attempting to find close button on ad")
+        pullImage()
+        clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/closeAdButton.png")
+        print(clickLocation)
+        time.sleep(5)
+        
+    
+    print("found it! clicking it")
+    adbTapScreen(clickLocation)
+    
+    #wait for ad to close
+    time.sleep(5)
+
+
 #rewards
 def getReward():
     pullImage()
-    #clickLocation = findBillBoard()
-    clickLocation = templateMatch("bots/myHospital/screenshot/billboard-screen.png" , "bots/myHospital/template/billboard-sample2.png")
+    clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/billboard-sample2.png")
+    if(not clickLocation):
+        clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/billboardNoReward.png")
+        print("I have to wait for more rewards")
+        return False
+
+
+    
     adbTapScreen(clickLocation)
 
     #wait for box
@@ -25,20 +51,22 @@ def getReward():
     adbTapScreen(clickLocation)
 
     #watch ad
-    time.sleep(60)
-    #35
-
-    #close ad
-    clickLocation = (2668, 80)
-    adbTapScreen(clickLocation)
-
-    #wait for ad to close
-    time.sleep(5)
-
+    watchAdvertisement()
+ 
     #check if the claim button is visable
     pullImage()
     #clickLocation = findBillBoardReward()
-    clickLocation = templateMatch("bots/myHospital/screenshot/billboard-screen.png" , "bots/myHospital/template/claimReward3.png")
+    clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/claimReward3.png")
     adbTapScreen(clickLocation)
 
-getReward()
+    return True
+
+
+while(True):
+    gotReward = getReward()
+    
+    if(gotReward):
+        time.sleep(5)
+    else:
+        print("maybe I'll try in a minute")
+        time.sleep(60)

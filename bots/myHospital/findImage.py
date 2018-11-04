@@ -31,8 +31,17 @@ def templateMatch(sourcePath , templatePath , accuracy = 0.9 , showImage = False
         cv2.circle(img, clickLocation, 10, (255, 0, 0), -1)
 
     if showImage:
+        
+        
+        imgResize = cv2.resize(img , (1600,900))
         cv2.imshow("img", img)
+        cv2.imshow("img2", imgResize)
+
+        cv2.namedWindow('image', cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('image', 600,600)
         cv2.imshow("result" , result)
+        
+
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
