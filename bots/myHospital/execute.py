@@ -4,6 +4,7 @@ import subprocess
 from pullImage import pullImage
 from findImage import templateMatch
 from clicker import adbTapScreen
+from myadb import sendBackKey
 
 def myinit():
     subprocess.Popen('powershell.exe adb shell monkey -p com.cherrypickgames.myhospital -v 500')
@@ -19,16 +20,27 @@ def watchAdvertisement():
 
     clickLocation = ()
 
+    attempt = 0
+    foundCloseButton = True
+
     while(not clickLocation):
+        attempt += 1
         print("attempting to find close button on ad")
         pullImage()
-        clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/closeAdButton.png")
+        clickLocation = templateMatch("screenshot/ADBScreenshot.png" , "template/closeAdButton.png")
         print(clickLocation)
         time.sleep(5)
-        
-    
-    print("found it! clicking it")
-    adbTapScreen(clickLocation)
+
+        if(attempt > 5):
+            print("trying to escape")
+            foundCloseButton = False
+            sendBackKey()
+            break
+
+
+    if(foundCloseButton):
+        print("found it! clicking it")
+        adbTapScreen(clickLocation)
     
     #wait for ad to close
     time.sleep(5)
@@ -37,9 +49,15 @@ def watchAdvertisement():
 #rewards
 def getReward():
     pullImage()
-    clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/billboard-sample2.png")
+    clickLocation = templateMatch("screenshot/ADBScreenshot.png" , "template/billboard-sample2.png")
+
+    #If that didnt work look for heart billboard
     if(not clickLocation):
-        clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/billboardNoReward.png")
+        clickLocation = templateMatch("screenshot/ADBScreenshot.png" , "template/heartbillboard.png")
+
+
+    if(not clickLocation):
+        clickLocation = templateMatch("screenshot/ADBScreenshot.png" , "template/billboardNoReward.png")
         print("I have to wait for more rewards")
         return False
 
@@ -60,17 +78,43 @@ def getReward():
     #check if the claim button is visable
     pullImage()
     #clickLocation = findBillBoardReward()
-    clickLocation = templateMatch("bots/myHospital/screenshot/ADBScreenshot.png" , "bots/myHospital/template/claimReward3.png")
+    clickLocation = templateMatch("screenshot/ADBScreenshot.png" , "template/claimReward3.png")
     adbTapScreen(clickLocation)
 
     return True
 
-
+attempt = 0
 while(True):
+    
     gotReward = getReward()
     
     if(gotReward):
+        #reset attempt counter
+        attempt = 0
         time.sleep(5)
+
     else:
+        attempt += 1
         print("maybe I'll try in a minute")
-        time.sleep(60)
+        time.sleep(2)
+        #time.sleep(60)
+
+        if(attempt > 5):
+            print("something is wrong with the board or i cant see it")
+            print("Try to click the inactive board")
+            #look for the switched off billboard
+            clickLocation = templateMatch("screenshot/ADBScreenshot.png" , "template/billboardNoReward.png")
+            if(not clickLocation):
+                print("I give up!")
+                exit
+            
+            #The billboard is switched off, see if I have hit the max limit
+            adbTapScreen(clickLocation)
+            pullImage()
+
+            #check the image
+            #if it says max reached then quit
+
+            #if it says wait for more ads reset counter to zero and go around again
+
+

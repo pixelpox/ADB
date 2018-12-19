@@ -4,7 +4,7 @@ from collectVitamins import collectVitamins
 import time
 
 vitaminlastCheck = datetime.datetime.now()
-vitaminwaitPeriod = timedelta(minutes=1)
+vitaminwaitPeriod = timedelta(minutes=8)
 #vitaminwaitPeriod = timedelta(minutes=12)
 vitaminnextCheck = (vitaminlastCheck + vitaminwaitPeriod)
 
@@ -50,4 +50,4 @@ setupVitamins()
 
 while(True):
     checkVitamins()
-    time.sleep(5)
+    time.sleep(120)
